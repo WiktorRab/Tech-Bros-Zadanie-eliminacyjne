@@ -1,0 +1,6 @@
+*.o
+netscope
+gen_sample_pcap
+output/
+samples/
+.vscode/
