@@ -21,10 +21,26 @@ static void print_usage(const char *prog) {
 }
 
 static int ensure_dir(const char *dir) {
-    if (mkdir(dir, 0755) == -1 && errno != EEXIST) {
+    if (mkdir(dir, 0755) == 0) {
+        return 0;
+    }
+
+    if (errno != EEXIST) {
         perror("[ERROR] mkdir");
         return -1;
     }
+
+    struct stat info;
+    if (stat(dir, &info) == -1) {
+        perror("[ERROR] stat");
+        return -1;
+    }
+
+    if (!S_ISDIR(info.st_mode)) {
+        fprintf(stderr, "[ERROR] Output path '%s' is not a directory.\n", dir);
+        return -1;
+    }
+
     return 0;
 }
 
